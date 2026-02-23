@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, initial-scale=1" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Goudy+Bookletter+1911&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --size:1080px;
+    --padX:72px;
+    --gold:#f5c26b;
+    --etsy:#e9611b;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    width:var(--size);
+    height:var(--size);
+    font-family: Inter, system-ui, sans-serif;
+    color:#fff;
+    overflow:hidden;
+    position:relative;
+    background:#0b0d12;
+  }
+
+  /* Blurred background */
+  .bg{
+    position:absolute;
+    inset:0;
+    background-size:cover;
+    background-position:center;
+    filter:blur(14px);
+    transform:scale(1.05);
+    z-index:0;
+  }
+
+  .overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    z-index:1;
+  }
+
+  .content{
+    position:relative;
+    z-index:2;
+    height:100%;
+    padding:0 var(--padX);
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    padding-bottom:140px;
+  }
+
+  .reviewBlock{
+    max-width:900px;
+  }
+
+  .headerRow{
+    display:flex;
+    align-items:center;
+    gap:20px;
+  }
+
+  .avatar{
+    width:96px;
+    height:96px;
+    border-radius:50%;
+    background:rgba(255,255,255,.15);
+    border:5px solid rgba(255,255,255,.15);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+
+  .avatar span{
+    font-size:40px;
+    opacity:.8;
+  }
+
+  .nameStars{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .name{
+    font-size:25px;
+    font-weight:600;
+  }
+
+  .stars{
+    font-size:36px;
+    letter-spacing:5px;
+    color:var(--gold);
+  }
+
+  .separator{
+    margin:22px 0;
+    height:2px;
+    background:rgba(255,255,255,.35);
+  }
+
+  .review{
+    font-family:"DM Sans", system-ui, sans-serif;
+    font-size:34px;
+    line-height:1.38;
+    opacity:.95;
+  }
+
+  .etsyVerified{
+    margin-top:30px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:26px;
+    color:var(--etsy);
+    font-family:"Goudy Bookletter 1911", serif;
+    font-weight:600;
+  }
+
+  .etsyLogo{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    background:var(--etsy);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:20px;
+    font-family:"Goudy Bookletter 1911", serif;
+  }
+
+  /* Swipe badge (50% transparent) */
+  .swipeBadge{
+    position:absolute;
+    right:48px;
+    bottom:48px;
+    background:rgba(255,255,255,.5);
+    color:#1b1f2a;
+    border-radius:999px;
+    padding:14px 18px 14px 14px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    box-shadow:0 10px 28px rgba(0,0,0,.25);
+    z-index:3;
+  }
+
+  .swipeText{
+    font-size:26px;
+    font-weight:900;
+    letter-spacing:1px;
+  }
+
+  .burger{
+    width:28px;
+    height:20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+
+  .burger span{
+    height:3px;
+    background:#1b1f2a;
+    border-radius:999px;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="bg" id="bg"></div>
+<div class="overlay"></div>
+
+<div class="content">
+  <div class="reviewBlock">
+
+    <div class="headerRow">
+      <div class="avatar"><span>👤</span></div>
+
+      <div class="nameStars">
+        <div class="name" id="name">Customer Name</div>
+        <div class="stars" id="stars">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="review" id="review">
+      Placeholder review text.
+    </div>
+
+    <div class="etsyVerified">
+      <div class="etsyLogo">E</div>
+      <div>Etsy verified review</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="swipeBadge">
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
+    <path d="M14.5 6.5 9 12l5.5 5.5"
+      stroke="#1b1f2a"
+      stroke-width="2.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+  </svg>
+
+  <div class="swipeText">SWIPE</div>
+
+  <div class="burger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  const imgUrl = params.get("img_url");
+  const name   = params.get("name");
+  const stars  = params.get("stars") || "5";
+  const text   = params.get("text");
+
+  if (imgUrl) {
+    document.getElementById("bg").style.backgroundImage = `url('${imgUrl}')`;
+  }
+
+  if (name) {
+    document.getElementById("name").textContent = name;
+  }
+
+  if (text) {
+    document.getElementById("review").textContent = text;
+  }
+
+  const starCount = Math.max(1, Math.min(5, parseInt(stars, 10)));
+  document.getElementById("stars").textContent =
+    "★★★★★".slice(0, starCount) + "☆☆☆☆☆".slice(0, 5 - starCount);
+</script>
+
+</body>
+</html>

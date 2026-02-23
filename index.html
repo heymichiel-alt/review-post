@@ -29,10 +29,11 @@
     background:#0b0d12;
   }
 
-  /* Blurred background */
+  /* Blurred background image */
   .bg{
     position:absolute;
     inset:0;
+    background-image:url('{{img_url}}');
     background-size:cover;
     background-position:center;
     filter:blur(14px);
@@ -120,7 +121,7 @@
     display:flex;
     align-items:center;
     gap:12px;
-    font-size:26px;
+    font-size:27px;
     color:var(--etsy);
     font-family:"Goudy Bookletter 1911", serif;
     font-weight:600;
@@ -160,26 +161,12 @@
     font-weight:900;
     letter-spacing:1px;
   }
-
-  .burger{
-    width:28px;
-    height:20px;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-  }
-
-  .burger span{
-    height:3px;
-    background:#1b1f2a;
-    border-radius:999px;
-  }
 </style>
 </head>
 
 <body>
 
-<div class="bg" id="bg"></div>
+<div class="bg"></div>
 <div class="overlay"></div>
 
 <div class="content">
@@ -189,15 +176,17 @@
       <div class="avatar"><span>👤</span></div>
 
       <div class="nameStars">
-        <div class="name" id="name">Customer Name</div>
-        <div class="stars" id="stars">★★★★★</div>
+        <div class="name">{{name}}</div>
+        <div class="stars">
+          {{stars}}★★★★★
+        </div>
       </div>
     </div>
 
     <div class="separator"></div>
 
-    <div class="review" id="review">
-      Placeholder review text.
+    <div class="review">
+      “{{text:0:150}}…”
     </div>
 
     <div class="etsyVerified">
@@ -216,40 +205,8 @@
       stroke-linecap="round"
       stroke-linejoin="round"/>
   </svg>
-
   <div class="swipeText">SWIPE</div>
-
-  <div class="burger">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
 </div>
-
-<script>
-  const params = new URLSearchParams(window.location.search);
-
-  const imgUrl = params.get("img_url");
-  const name   = params.get("name");
-  const stars  = params.get("stars") || "5";
-  const text   = params.get("text");
-
-  if (imgUrl) {
-    document.getElementById("bg").style.backgroundImage = `url('${imgUrl}')`;
-  }
-
-  if (name) {
-    document.getElementById("name").textContent = name;
-  }
-
-  if (text) {
-    document.getElementById("review").textContent = text;
-  }
-
-  const starCount = Math.max(1, Math.min(5, parseInt(stars, 10)));
-  document.getElementById("stars").textContent =
-    "★★★★★".slice(0, starCount) + "☆☆☆☆☆".slice(0, 5 - starCount);
-</script>
 
 </body>
 </html>

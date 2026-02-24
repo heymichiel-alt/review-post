@@ -29,12 +29,13 @@
     background:#0b0d12;
   }
 
+  /* Fully blurred background */
   .bg{
     position:absolute;
     inset:0;
     background-size:cover;
     background-position:center;
-    filter:blur(14px);
+    filter:blur(7px);
     transform:scale(1.05);
     z-index:0;
   }
@@ -42,7 +43,7 @@
   .overlay{
     position:absolute;
     inset:0;
-    background:rgba(0,0,0,.55);
+    background:rgba(0,0,0,.35);
     z-index:1;
   }
 
@@ -74,7 +75,6 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    flex-shrink:0;
   }
 
   .avatar span{ font-size:40px; opacity:.8; }
@@ -107,14 +107,18 @@
   }
 
   .etsyVerified{
-    margin-top:30px;
+    position:absolute;
+    left:48px;
+    bottom:48px;
     display:flex;
     align-items:center;
     gap:12px;
-    font-size:26px;
+    font-size:22px;
     color:var(--etsy);
     font-family:"Goudy Bookletter 1911", serif;
     font-weight:600;
+    z-index:3;
+    text-shadow:0 6px 18px rgba(0,0,0,.45);
   }
 
   .etsyLogo{
@@ -127,29 +131,34 @@
     justify-content:center;
     color:#fff;
     font-size:20px;
-    font-family:"Goudy Bookletter 1911", serif;
+    line-height:1;
   }
 
-  /* Swipe badge (50% transparent) */
   .swipeBadge{
     position:absolute;
     right:48px;
     bottom:48px;
-    background:rgba(255,255,255,.5);
+    background:rgba(255,255,255,.5); /* 50% transparent */
     color:#1b1f2a;
     border-radius:999px;
-    padding:14px 18px 14px 14px;
+    padding:14px 16px;
     display:flex;
     align-items:center;
-    gap:12px;
+    gap:10px;
     box-shadow:0 10px 28px rgba(0,0,0,.25);
     z-index:3;
+  }
+
+  .swipeIcon{
+    font-size:32px;
+    line-height:1;
   }
 
   .swipeText{
     font-size:26px;
     font-weight:900;
     letter-spacing:1px;
+    padding-right: 10px;
   }
 </style>
 </head>
@@ -171,31 +180,25 @@
       <div class="separator"></div>
 
       <div class="review" id="review">“...”</div>
-
-      <div class="etsyVerified">
-        <div class="etsyLogo">E</div>
-        <div>Verified Etsy review</div>
-      </div>
     </div>
   </div>
 
+  <div class="etsyVerified">
+    <div class="etsyLogo">E</div>
+    <div>Verified Etsy Reviews</div>
+  </div>
+
   <div class="swipeBadge">
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
-      <path d="M14.5 6.5 9 12l5.5 5.5"
-        stroke="#1b1f2a"
-        stroke-width="2.6"
-        stroke-linecap="round"
-        stroke-linejoin="round"/>
-    </svg>
+    <div class="swipeIcon">👈</div>
     <div class="swipeText">SWIPE</div>
   </div>
 
 <script>
-  function trimTo150(s){
+  function trimTo135(s){
     if(!s) return "";
     s = String(s).replace(/\s+/g," ").trim();
-    if(s.length <= 150) return s;
-    return s.slice(0,150).trimEnd() + "...";
+    if (s.length <= 135) return s;
+    return s.slice(0,135).trimEnd() + "...";
   }
 
   function starsString(n){
@@ -207,14 +210,14 @@
 
   const p = new URLSearchParams(window.location.search);
 
-  // Match your Make URL keys:
   const imageUrl = p.get("image_url");
   const name     = p.get("name");
   const stars    = p.get("stars");
   const review   = p.get("review");
 
   if (imageUrl) {
-    document.getElementById("bg").style.backgroundImage = `url('${imageUrl}')`;
+    document.getElementById("bg").style.backgroundImage =
+      `url('${imageUrl}')`;
   }
 
   if (name) {
@@ -223,8 +226,9 @@
 
   document.getElementById("stars").textContent = starsString(stars);
 
-  const trimmed = trimTo150(review);
-  document.getElementById("review").textContent = trimmed ? `“${trimmed}”` : "“...”";
+  const trimmed = trimTo135(review);
+  document.getElementById("review").textContent =
+    trimmed ? `“${trimmed}”` : "“...”";
 </script>
 
 </body>

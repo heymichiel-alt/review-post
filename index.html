@@ -13,7 +13,6 @@
     --size:1080px;
     --padX:72px;
     --gold:#f5c26b;
-    --etsy:#e9611b;
   }
 
   *{ box-sizing:border-box; }
@@ -29,22 +28,34 @@
     background:#0b0d12;
   }
 
-  /* Fully blurred background */
   .bg{
     position:absolute;
     inset:0;
     background-size:cover;
     background-position:center;
-    filter:blur(7px);
-    transform:scale(1.05);
     z-index:0;
   }
 
   .overlay{
     position:absolute;
     inset:0;
-    background:rgba(0,0,0,.35);
+    background:rgba(0,0,0,.25);
     z-index:1;
+  }
+
+  /* Top-left Etsy review badge image */
+  .etsyBadgeImage{
+    position:absolute;
+    top:48px;
+    left:48px;
+    width:220px;
+    z-index:3;
+  }
+
+  .etsyBadgeImage img{
+    width:100%;
+    height:auto;
+    display:block;
   }
 
   .content{
@@ -53,85 +64,46 @@
     height:100%;
     padding:0 var(--padX);
     display:flex;
-    flex-direction:column;
-    justify-content:flex-end;
-    padding-bottom:140px;
-  }
-
-  .reviewBlock{ max-width:900px; }
-
-  .headerRow{
-    display:flex;
-    align-items:center;
-    gap:20px;
-  }
-
-  .avatar{
-    width:96px;
-    height:96px;
-    border-radius:50%;
-    background:rgba(255,255,255,.15);
-    border:5px solid rgba(255,255,255,.15);
-    display:flex;
     align-items:center;
     justify-content:center;
   }
 
-  .avatar span{ font-size:40px; opacity:.8; }
-
-  .nameStars{
+  .reviewBlock{
+    width:100%;
+    max-width:900px;
     display:flex;
-    flex-direction:column;
-    gap:8px;
+    justify-content:center;
   }
 
-  .name{ font-size:25px; font-weight:600; }
+  .quoteCard{
+    width:100%;
+    background:rgba(0,0,0,.65);
+    border-radius:28px;
+    padding:48px 44px;
+    box-shadow:0 18px 48px rgba(0,0,0,.35);
+    text-align:center;
+  }
 
   .stars{
-    font-size:36px;
-    letter-spacing:5px;
+    font-size:44px;
+    letter-spacing:6px;
     color:var(--gold);
-  }
-
-  .separator{
-    margin:22px 0;
-    height:2px;
-    background:rgba(255,255,255,.35);
+    margin-bottom:18px;
   }
 
   .review{
     font-family:"DM Sans", system-ui, sans-serif;
-    font-size:34px;
+    font-size:36px;
     line-height:1.38;
     opacity:.95;
+    margin:0;
   }
 
-  .etsyVerified{
-    position:absolute;
-    left:48px;
-    bottom:48px;
-    display:flex;
-    align-items:center;
-    gap:12px;
-    font-size:22px;
-    color:var(--etsy);
-    font-family:"Goudy Bookletter 1911", serif;
+  .byline{
+    margin-top:18px;
+    font-size:24px;
     font-weight:600;
-    z-index:3;
-    text-shadow:0 6px 18px rgba(0,0,0,.45);
-  }
-
-  .etsyLogo{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    background:var(--etsy);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#fff;
-    font-size:20px;
-    line-height:1;
+    opacity:.9;
   }
 
   .swipeBadge{
@@ -139,7 +111,6 @@
     right:48px;
     bottom:48px;
     background:rgba(255,255,255,.2);
-    color:#1b1f2a;
     border-radius:999px;
     padding:14px 16px;
     display:flex;
@@ -158,8 +129,8 @@
     font-size:20px;
     font-weight:900;
     letter-spacing:1px;
-        padding-right: 10px;
-        color: var(--gold);
+    padding-right:10px;
+    color:var(--gold);
   }
 </style>
 </head>
@@ -168,25 +139,19 @@
   <div class="bg" id="bg"></div>
   <div class="overlay"></div>
 
-  <div class="content">
-    <div class="reviewBlock">
-      <div class="headerRow">
-        <div class="avatar"><span>👤</span></div>
-        <div class="nameStars">
-          <div class="name" id="name">Customer</div>
-          <div class="stars" id="stars">★★★★★</div>
-        </div>
-      </div>
-
-      <div class="separator"></div>
-
-      <div class="review" id="review">“...”</div>
-    </div>
+  <!-- Top-left Etsy badge -->
+  <div class="etsyBadgeImage">
+    <img src="https://heymichiel-alt.github.io/static-assets/etsy-review.png" alt="Etsy review badge">
   </div>
 
-  <div class="etsyVerified">
-    <div class="etsyLogo">E</div>
-    <div>Verified Etsy Review</div>
+  <div class="content">
+    <div class="reviewBlock">
+      <div class="quoteCard">
+        <div class="stars" id="stars">★★★★★</div>
+        <p class="review" id="review">“...”</p>
+        <div class="byline" id="byline">- Customer</div>
+      </div>
+    </div>
   </div>
 
   <div class="swipeBadge">
@@ -221,15 +186,14 @@
       `url('${imageUrl}')`;
   }
 
-  if (name) {
-    document.getElementById("name").textContent = name;
-  }
-
   document.getElementById("stars").textContent = starsString(stars);
 
   const trimmed = trimTo135(review);
   document.getElementById("review").textContent =
     trimmed ? `“${trimmed}”` : "“...”";
+
+  const displayName = name ? String(name).trim() : "Customer";
+  document.getElementById("byline").textContent = `- ${displayName}`;
 </script>
 
 </body>
